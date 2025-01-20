@@ -1,13 +1,8 @@
 "use client";
 
 import Ballpit from "@/Ballpit/Ballpit";
-import GridMotion from "@/GridMotion/GridMotion";
 import Footer from "@/components/Footer";
 import { useEffect, useState } from "react";
-
-const items = Array(28).fill(
-  "https://ik.imagekit.io/tlredits/cover.png?updatedAt=1732872248890"
-);
 
 export default function Services() {
   const [isClient, setIsClient] = useState(false);
@@ -75,8 +70,8 @@ export default function Services() {
               </div>
               <h3 className="text-2xl font-bold mb-4">Content Creation</h3>
               <p className="text-gray-600">
-                Engaging content that captures your audience's attention and
-                drives results.
+                Engaging content that captures your audience&apos;s attention
+                and drives results.
               </p>
             </div>
 
@@ -207,8 +202,6 @@ export default function Services() {
           </div>
         </div>
       </div>
-
-      <GridMotion items={items} />
 
       <Footer />
     </>

@@ -111,11 +111,13 @@ class x {
   }
   #u(e) {
     this.#s = e[0].isIntersecting;
-    this.#s ? this.#w() : this.#z();
+    const action = this.#s ? this.#w() : this.#z();
+    return action;
   }
   #v() {
     if (this.#s) {
-      document.hidden ? this.#z() : this.#w();
+      const action = document.hidden ? this.#z() : this.#w();
+      return action;
     }
   }
   #f() {
@@ -481,15 +483,15 @@ class Y extends c {
         e.fragmentShader;
       e.fragmentShader = e.fragmentShader.replace(
         "void main() {",
-        "\n        void RE_Direct_Scattering(const in IncidentLight directLight, const in vec2 uv, const in vec3 geometryPosition, const in vec3 geometryNormal, const in vec3 geometryViewDir, const in vec3 geometryClearcoatNormal, inout ReflectedLight reflectedLight) {\n          vec3 scatteringHalf = normalize(directLight.direction + (geometryNormal * thicknessDistortion));\n          float scatteringDot = pow(saturate(dot(geometryViewDir, -scatteringHalf)), thicknessPower) * thicknessScale;\n          #ifdef USE_COLOR\n            vec3 scatteringIllu = (scatteringDot + thicknessAmbient) * vColor;\n          #else\n            vec3 scatteringIllu = (scatteringDot + thicknessAmbient) * diffuse;\n          #endif\n          reflectedLight.directDiffuse += scatteringIllu * thicknessAttenuation * directLight.color;\n        }\n\n        void main() {\n      ",
+        "\n        void RE_Direct_Scattering(const in IncidentLight directLight, const in vec2 uv, const in vec3 geometryPosition, const in vec3 geometryNormal, const in vec3 geometryViewDir, const in vec3 geometryClearcoatNormal, inout ReflectedLight reflectedLight) {\n          vec3 scatteringHalf = normalize(directLight.direction + (geometryNormal * thicknessDistortion));\n          float scatteringDot = pow(saturate(dot(geometryViewDir, -scatteringHalf)), thicknessPower) * thicknessScale;\n          #ifdef USE_COLOR\n            vec3 scatteringIllu = (scatteringDot + thicknessAmbient) * vColor;\n          #else\n            vec3 scatteringIllu = (scatteringDot + thicknessAmbient) * diffuse;\n          #endif\n          reflectedLight.directDiffuse += scatteringIllu * thicknessAttenuation * directLight.color;\n        }\n\n        void main() {\n      "
       );
       const t = h.lights_fragment_begin.replaceAll(
         "RE_Direct( directLight, geometryPosition, geometryNormal, geometryViewDir, geometryClearcoatNormal, material, reflectedLight );",
-        "\n          RE_Direct( directLight, geometryPosition, geometryNormal, geometryViewDir, geometryClearcoatNormal, material, reflectedLight );\n          RE_Direct_Scattering(directLight, vUv, geometryPosition, geometryNormal, geometryViewDir, geometryClearcoatNormal, reflectedLight);\n        ",
+        "\n          RE_Direct( directLight, geometryPosition, geometryNormal, geometryViewDir, geometryClearcoatNormal, material, reflectedLight );\n          RE_Direct_Scattering(directLight, vUv, geometryPosition, geometryNormal, geometryViewDir, geometryClearcoatNormal, reflectedLight);\n        "
       );
       e.fragmentShader = e.fragmentShader.replace(
         "#include <lights_fragment_begin>",
-        t,
+        t
       );
       if (this.onBeforeCompile2) this.onBeforeCompile2(e);
     };
@@ -541,7 +543,7 @@ class Z extends d {
   #S() {
     this.ambientLight = new f(
       this.config.ambientColor,
-      this.config.ambientIntensity,
+      this.config.ambientIntensity
     );
     this.add(this.ambientLight);
     this.light = new u(this.config.colors[0], this.config.lightIntensity);
