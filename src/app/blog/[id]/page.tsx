@@ -1,6 +1,6 @@
 // pages/blog/[id].tsx
 
-import BlogView from "@/Components/BlogView";
+import BlogView from "@/components/BlogView";
 
 const Blog: React.FC = () => {
   return <BlogView />;

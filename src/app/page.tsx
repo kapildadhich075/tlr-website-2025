@@ -17,8 +17,8 @@ import {
   SettingsIcon,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import PricingList from "@/Components/Pricing-List";
-import Footer from "@/Components/Footer";
+import PricingList from "@/components/Pricing-List";
+import Footer from "@/components/Footer";
 
 const data = [
   {

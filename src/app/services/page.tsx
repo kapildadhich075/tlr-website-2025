@@ -2,7 +2,7 @@
 
 import Ballpit from "@/Ballpit/Ballpit";
 import GridMotion from "@/GridMotion/GridMotion";
-import Footer from "@/Components/Footer";
+import Footer from "@/components/Footer";
 import { useEffect, useState } from "react";
 
 const items = Array(28).fill(

@@ -2,7 +2,7 @@
 
 // pages/index.tsx
 
-import ChatUI from "@/Components/ChatUI";
+import ChatUI from "@/components/ChatUI";
 
 const Home: React.FC = () => {
   return (
