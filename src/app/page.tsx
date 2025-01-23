@@ -18,7 +18,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import PricingList from "@/components/Pricing-List";
-import Footer from "@/components/Footer";
+import FooterAndContact from "@/components/Footer";
 
 const data = [
   {
@@ -276,7 +276,7 @@ export default function Home() {
         </div>
       </div>
 
-      <Footer />
+      <FooterAndContact />
     </>
   );
 }

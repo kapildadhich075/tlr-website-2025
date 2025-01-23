@@ -7,7 +7,7 @@ import { Textarea } from "@/components/ui/textarea";
 
 import { Mail, Phone, MapPin, ChevronRightIcon } from "lucide-react";
 import { motion } from "framer-motion";
-import Footer from "@/components/Footer";
+import FooterAndContact from "@/components/Footer";
 import SplitText from "@/SplitText/SplitText";
 
 const ContactInfo = ({
@@ -254,7 +254,7 @@ export default function ContactPage() {
           </div>
         </div>
       </div>
-      <Footer />
+      <FooterAndContact />
     </>
   );
 }
