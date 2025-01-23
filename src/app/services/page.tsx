@@ -1,7 +1,7 @@
 "use client";
 
 import Ballpit from "@/Ballpit/Ballpit";
-import Footer from "@/components/Footer";
+import { Footer } from "@/components/Footer";
 import { useEffect, useState } from "react";
 
 export default function Services() {

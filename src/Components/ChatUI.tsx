@@ -5,7 +5,7 @@ import { useParams } from "next/navigation";
 import useGemini from "@/hooks/gemini";
 import { Twitter, Bot, Loader2, User } from "lucide-react";
 
-const ChatUI: React.FC = () => {
+export function ChatUI() {
   const params = useParams();
   const [blog, setBlog] = useState("");
   const [messages, setMessages] = useState<string[]>([]);
@@ -185,6 +185,4 @@ const ChatUI: React.FC = () => {
       </form>
     </div>
   );
-};
-
-export default ChatUI;
+}

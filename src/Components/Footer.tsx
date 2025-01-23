@@ -46,7 +46,7 @@ const ContactInfo = ({
   </div>
 );
 
-export default function Footer() {
+export function Footer() {
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
 
