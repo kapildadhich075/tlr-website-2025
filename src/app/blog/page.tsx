@@ -1,8 +1,8 @@
 "use client";
 
-// pages/index.tsx
-
 import { ChatUI } from "@/components/ChatUI";
+
+// pages/index.tsx
 
 const Home: React.FC = () => {
   return (
