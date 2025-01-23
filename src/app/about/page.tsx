@@ -168,9 +168,8 @@ export default function AboutSection() {
                   <Image
                     src={project.image}
                     alt={`Portfolio item ${index + 1}`}
-                    layout="fill"
-                    objectFit="cover"
-                    className="transform transition-transform duration-500 group-hover:scale-110"
+                    fill
+                    className="transform transition-transform duration-500 group-hover:scale-110 object-cover"
                   />
                   <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
                     <Sheet>
@@ -199,8 +198,8 @@ export default function AboutSection() {
                               <Image
                                 src={project.image}
                                 alt={project.title}
-                                layout="fill"
-                                objectFit="cover"
+                                fill
+                                className="object-cover"
                               />
                             </div>
                             <p className="text-muted-foreground max-w-2xl mx-auto text-justify">
@@ -251,9 +250,8 @@ export default function AboutSection() {
                     <Image
                       src={member.image}
                       alt={member.name}
-                      layout="fill"
-                      objectFit="cover"
-                      className="group-hover:scale-110 transition-transform duration-500"
+                      fill
+                      className="group-hover:scale-110 transition-transform duration-500 object-cover"
                     />
                   </div>
                   <h4 className="text-xl font-semibold mb-2">{member.name}</h4>
