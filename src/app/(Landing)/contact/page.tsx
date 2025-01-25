@@ -8,7 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Mail, Phone, MapPin, ChevronRightIcon } from "lucide-react";
 import { motion } from "framer-motion";
 import { Footer } from "@/components/Footer";
-import SplitText from "@/SplitText/SplitText";
+import SplitText from "@/components/SplitText/SplitText";
 
 const ContactInfo = ({
   Icon,

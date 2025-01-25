@@ -86,6 +86,16 @@ export default function Header() {
               Contact
             </Link>
           </li>
+          <li>
+            <SignedIn>
+              <Link
+                href="/dashboard"
+                className="hover:text-white transition-colors duration-200 font-medium"
+              >
+                Dashboard
+              </Link>
+            </SignedIn>
+          </li>
           <li className="ml-2">
             <SignedOut>
               <SignInButton mode="modal">
@@ -158,6 +168,16 @@ export default function Header() {
                   >
                     Contact
                   </Link>
+                </li>
+                <li>
+                  <SignedIn>
+                    <Link
+                      href="/dashboard"
+                      className="text-lg font-medium hover:text-white transition-colors duration-200"
+                    >
+                      Dashboard
+                    </Link>
+                  </SignedIn>
                 </li>
                 <li className="pt-4">
                   <SignedOut>

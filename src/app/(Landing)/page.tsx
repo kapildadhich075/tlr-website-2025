@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { Accordion } from "rizzui";
 // import Hyperspeed from "@/Hyperspeed/Hyperspeed";
 
-import SplitText from "@/SplitText/SplitText";
+import SplitText from "@/components/SplitText/SplitText";
 import Link from "next/link";
 import Image from "next/image";
 import {

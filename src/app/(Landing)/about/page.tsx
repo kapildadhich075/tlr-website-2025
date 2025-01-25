@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { Camera, Edit, Film, Award } from "lucide-react";
 
-import SplitText from "@/SplitText/SplitText";
+import SplitText from "@/components/SplitText/SplitText";
 import {
   Sheet,
   SheetContent,
@@ -54,17 +54,20 @@ const teamMembers = [
   {
     name: "Jane Doe",
     role: "Creative Director",
-    image: "/placeholder.svg?height=300&width=300",
+    image:
+      "https://ik.imagekit.io/umdiwr6ma/kapilphoto?updatedAt=1732567803497",
   },
   {
     name: "John Smith",
     role: "Lead Cinematographer",
-    image: "/placeholder.svg?height=300&width=300",
+    image:
+      "https://ik.imagekit.io/umdiwr6ma/kapilphoto?updatedAt=1732567803497",
   },
   {
     name: "Emily Johnson",
     role: "Senior Editor",
-    image: "/placeholder.svg?height=300&width=300",
+    image:
+      "https://ik.imagekit.io/umdiwr6ma/kapilphoto?updatedAt=1732567803497",
   },
 ];
 

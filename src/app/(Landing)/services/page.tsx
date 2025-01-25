@@ -1,6 +1,6 @@
 "use client";
 
-import Ballpit from "@/Ballpit/Ballpit";
+import Ballpit from "@/components/Ballpit/Ballpit";
 import { Footer } from "@/components/Footer";
 import { useEffect, useState } from "react";
 
