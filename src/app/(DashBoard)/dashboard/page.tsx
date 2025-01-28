@@ -20,22 +20,22 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+import { Input } from "@/components/ui/input.tsx";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from "@/components/ui/select.tsx";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 
 import { Order } from "@/types/order";
-import { OrderTable } from "@/app/(DashBoard)/_components/OrderTable";
-import { OrderStatusBadge } from "@/app/(DashBoard)/_components/OrderStatusBadge";
-import { StatsCard } from "@/app/(DashBoard)/_components/StatsCard";
+import { OrderTable } from "@/app/(DashBoard)/_components/OrderTable.tsx";
+import { OrderStatusBadge } from "@/app/(DashBoard)/_components/OrderStatusBadge.tsx";
+import { StatsCard } from "@/app/(DashBoard)/_components/StatsCard.tsx";
 import { formSchema } from "@/types/order";
 import { useOrderStore } from "@/store/useOrderStore";
 function Dashboard() {
