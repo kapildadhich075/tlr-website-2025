@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import * as React from "react";
 import { PlusCircle } from "lucide-react";
 
 import { Card, CardContent } from "@/components/ui/card";
@@ -40,9 +40,9 @@ import { formSchema } from "@/types/order";
 import { useOrderStore } from "@/store/useOrderStore";
 function Dashboard() {
   const { orders, addOrder } = useOrderStore();
-  const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isAddOrderModalOpen, setIsAddOrderModalOpen] = useState(false);
+  const [selectedOrder, setSelectedOrder] = React.useState<Order | null>(null);
+  const [isModalOpen, setIsModalOpen] = React.useState(false);
+  const [isAddOrderModalOpen, setIsAddOrderModalOpen] = React.useState(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
