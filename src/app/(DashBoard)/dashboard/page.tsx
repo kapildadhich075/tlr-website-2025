@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { PlusCircle } from "lucide-react";
 
 import { Card, CardContent } from "@/components/ui/card";
@@ -37,8 +37,9 @@ import { OrderTable } from "@/app/(DashBoard)/_components/OrderTable";
 import { OrderStatusBadge } from "@/app/(DashBoard)/_components/OrderStatusBadge";
 import { StatsCard } from "@/app/(DashBoard)/_components/StatsCard";
 import { formSchema } from "@/types/order";
+import { useOrderStore } from "@/store/useOrderStore";
 function Dashboard() {
-  const [orders, setOrders] = useState<Order[]>([]);
+  const { orders, addOrder } = useOrderStore();
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isAddOrderModalOpen, setIsAddOrderModalOpen] = useState(false);
@@ -64,41 +65,13 @@ function Dashboard() {
     [orders]
   );
 
-  // Mock data - replace with actual API calls
-  useEffect(() => {
-    const mockOrders: Order[] = [
-      {
-        id: "001",
-        projectName: "Corporate Event Video",
-        status: "in-progress",
-        type: "video",
-        dueDate: "2024-04-15",
-        budget: 2500,
-      },
-      {
-        id: "002",
-        projectName: "Wedding Highlights",
-        status: "pending",
-        type: "production",
-        dueDate: "2024-05-01",
-        budget: 3500,
-      },
-      // Add more mock orders as needed
-    ];
-    setOrders(mockOrders);
-  }, []);
-
   const handleViewDetails = (order: Order) => {
     setSelectedOrder(order);
     setIsModalOpen(true);
   };
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
-    const newOrder: Order = {
-      id: `${orders.length + 1}`.padStart(3, "0"),
-      ...values,
-    };
-    setOrders([...orders, newOrder]);
+    addOrder({ ...values, id: crypto.randomUUID() });
     setIsAddOrderModalOpen(false);
     form.reset();
   };

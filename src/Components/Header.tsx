@@ -32,7 +32,7 @@ export default function Header() {
 
   return (
     <header
-      className={`w-full h-20 px-4 py-10 z-50 fixed transition-all duration-300 border-b ${
+      className={`w-full h-20 px-4 py-10 z-50  fixed transition-all duration-300 border-b ${
         scrolled
           ? "bg-black/80 backdrop-blur-sm border-gray-800"
           : "bg-transparent border-transparent"
@@ -53,11 +53,11 @@ export default function Header() {
         </div>
 
         {/* Desktop Navigation Links */}
-        <ul className="hidden md:flex items-center space-x-8 text-gray-200">
+        <ul className="hidden md:flex items-center space-x-8 text-gray-200 font-[anzo2]">
           <li>
             <Link
               href="/"
-              className="hover:text-white transition-colors duration-200 font-medium"
+              className="hover:text-white transition-colors duration-200 font-medium "
             >
               Home
             </Link>

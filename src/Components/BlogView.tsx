@@ -27,8 +27,8 @@ const BlogView: React.FC = () => {
 
   return (
     <div className="p-4">
-      <h1 className="text-2xl font-bold mb-4">Twitter Blog</h1>
-      <div className="whitespace-pre-wrap">{blog}</div>
+      <h1 className="text-2xl font-bold mb-4 text-white">Twitter Blog</h1>
+      <div className="whitespace-pre-wrap text-white">{blog}</div>
     </div>
   );
 };

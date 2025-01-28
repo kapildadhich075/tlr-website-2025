@@ -1,9 +1,11 @@
 import * as z from "zod";
 
+export type OrderStatus = "pending" | "in-progress" | "completed";
+
 export interface Order {
   id: string;
   projectName: string;
-  status: "pending" | "in-progress" | "completed";
+  status: OrderStatus;
   type: "video" | "production";
   dueDate: string;
   budget: number;

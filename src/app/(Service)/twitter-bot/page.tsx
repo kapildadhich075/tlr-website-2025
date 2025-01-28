@@ -16,9 +16,9 @@ const Home: React.FC = () => {
   }
 
   return (
-    <div className="container mx-auto">
+    <>
       <ChatUI />
-    </div>
+    </>
   );
 };
 
