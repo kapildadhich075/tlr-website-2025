@@ -32,17 +32,35 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 
-import { Order } from "@/types/order";
+import { formSchema, Order } from "@/types/order";
 import { OrderTable } from "@/app/(DashBoard)/_components/OrderTable.tsx";
 import { OrderStatusBadge } from "@/app/(DashBoard)/_components/OrderStatusBadge.tsx";
 import { StatsCard } from "@/app/(DashBoard)/_components/StatsCard.tsx";
-import { formSchema } from "@/types/order";
-import { useOrderStore } from "@/store/useOrderStore";
+import { useCreateOrder, useOrders } from "@/hooks/useOrders";
+import { useToast } from "@/hooks/use-toast";
+import { useState } from "react";
+import { Loading } from "@/components/ui/loading";
+import { ErrorDisplay } from "@/components/ui/error";
+
 function Dashboard() {
-  const { orders, addOrder } = useOrderStore();
-  const [selectedOrder, setSelectedOrder] = React.useState<Order | null>(null);
-  const [isModalOpen, setIsModalOpen] = React.useState(false);
-  const [isAddOrderModalOpen, setIsAddOrderModalOpen] = React.useState(false);
+  const { toast } = useToast();
+  const {
+    data: ordersData = [],
+    isLoading,
+    isError,
+    error,
+    refetch,
+  } = useOrders();
+  const orders: Order[] = ordersData.map((order) => ({
+    ...order,
+    status: order.status as "pending" | "in-progress" | "completed",
+    type: order.type as "video" | "production",
+  }));
+  const createOrderMutation = useCreateOrder();
+
+  const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isAddOrderModalOpen, setIsAddOrderModalOpen] = useState(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -50,12 +68,11 @@ function Dashboard() {
       projectName: "",
       type: "video",
       status: "pending",
-      dueDate: "",
+      dueDate: new Date(),
       budget: 0,
     },
   });
 
-  // Add memoization for filtered orders
   const orderStats = React.useMemo(
     () => ({
       active: orders.filter((o) => o.status === "in-progress").length,
@@ -70,12 +87,30 @@ function Dashboard() {
     setIsModalOpen(true);
   };
 
-  const onSubmit = (values: z.infer<typeof formSchema>) => {
-    addOrder({ ...values, id: crypto.randomUUID() });
-    setIsAddOrderModalOpen(false);
-    form.reset();
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    try {
+      await createOrderMutation.mutateAsync({
+        ...values,
+        dueDate: new Date(values.dueDate),
+      });
+      setIsAddOrderModalOpen(false);
+      form.reset();
+      toast({
+        title: "Success",
+        description: "Order created successfully",
+      });
+    } catch (error) {
+      console.error(error);
+      toast({
+        title: "Error",
+        description: "Failed to create order",
+        variant: "destructive",
+      });
+    }
   };
 
+  if (isLoading) return <Loading />;
+  if (isError) return <ErrorDisplay message={error?.message} retry={refetch} />;
   return (
     <div className="p-6 space-y-6 bg-gradient-to-r from-gray-900 to-black min-h-screen">
       <h1 className="text-3xl font-bold text-white">TLR Studios Dashboard</h1>
@@ -263,7 +298,15 @@ function Dashboard() {
                   <FormItem>
                     <FormLabel>Due Date</FormLabel>
                     <FormControl>
-                      <Input type="date" {...field} />
+                      <Input
+                        type="date"
+                        {...field}
+                        value={
+                          field.value
+                            ? new Date(field.value).toISOString().split("T")[0]
+                            : ""
+                        }
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

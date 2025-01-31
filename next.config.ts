@@ -11,6 +11,7 @@ const nextConfig: NextConfig = {
         hostname: "ik.imagekit.io",
       },
     ],
+    domains: ["res.cloudinary.com"],
   },
   async headers() {
     return [

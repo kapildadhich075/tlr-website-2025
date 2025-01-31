@@ -2,6 +2,8 @@
 
 import Ballpit from "@/components/Ballpit/Ballpit";
 import { Footer } from "@/components/Footer";
+import SplitText from "@/components/SplitText/SplitText";
+import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 
 export default function Services() {
@@ -18,11 +20,43 @@ export default function Services() {
   return (
     <>
       <section className="relative h-screen w-full overflow-hidden">
-        <div className="absolute inset-0 mx-auto text-center justify-center items-center flex">
-          <h1 className="text-white text-4xl md:text-8xl font-bold bg-clip-text text-transparent font-[anzo6]">
-            Conquer Content Challenges <br />
-            with Exceptional Solutions
-          </h1>
+        <div
+          className="absolute inset-0 mx-auto text-center justify-center items-center
+          flex flex-col 
+        "
+        >
+          <div className="relative z-20 h-full flex flex-col items-center justify-center px-4 space-y-8">
+            <SplitText
+              text="About Our Video Agency"
+              className="text-center text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-white max-w-7xl mx-auto font-[anzo6]"
+              delay={150}
+              animationFrom={{ opacity: 0, transform: "translate3d(0,50px,0)" }}
+              animationTo={{ opacity: 1, transform: "translate3d(0,0,0)" }}
+              easing="easeOutCubic"
+              threshold={0.2}
+              rootMargin="-50px"
+              onLetterAnimationComplete={() => {}}
+            />
+
+            <p className="text-lg sm:text-xl text-white/90 max-w-2xl mx-auto text-center">
+              We&apos;re passionate about creating compelling visual stories
+              that captivate audiences and drive results for our clients.
+            </p>
+
+            <Button
+              variant="secondary"
+              size="lg"
+              className="mt-8 rounded-full hover:scale-105 transition-all"
+              onClick={(e) => {
+                e.preventDefault();
+                document.querySelector("#about-content")?.scrollIntoView({
+                  behavior: "smooth",
+                });
+              }}
+            >
+              Discover More
+            </Button>
+          </div>
         </div>
         <Ballpit
           count={100}
@@ -34,12 +68,12 @@ export default function Services() {
 
         <div className="absolute inset-0 -z-10">
           <video
-            src="https://ik.imagekit.io/tlredits/moon.mp4?updatedAt=1737115754621"
+            src="/videos/service.mp4"
             autoPlay
             loop
             muted
             playsInline
-            className="w-full h-full object-cover "
+            className="w-full h-full object-cover opacity-70 bg-black z-[-10] blur-[5px] "
           />
         </div>
       </section>
