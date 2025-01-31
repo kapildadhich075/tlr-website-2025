@@ -1,13 +1,15 @@
-// app/api/orders/[id]/route.ts
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { getOrderById, updateOrder, deleteOrder } from "@/lib/db-queries";
 
-export async function GET(
-  request: Request,
-  { params }: { params: { id: string } }
-) {
+type RouteContext = {
+  params: {
+    id: string;
+  };
+};
+
+export async function GET(request: NextRequest, context: RouteContext) {
   try {
-    const order = await getOrderById(Number(params.id));
+    const order = await getOrderById(Number(context.params.id));
     if (!order) {
       return NextResponse.json({ error: "Order not found" }, { status: 404 });
     }
@@ -21,13 +23,10 @@ export async function GET(
   }
 }
 
-export async function PATCH(
-  request: Request,
-  { params }: { params: { id: string } }
-) {
+export async function PATCH(request: NextRequest, context: RouteContext) {
   try {
     const body = await request.json();
-    const updatedOrder = await updateOrder(Number(params.id), body);
+    const updatedOrder = await updateOrder(Number(context.params.id), body);
     return NextResponse.json(updatedOrder[0]);
   } catch (error) {
     console.error(error);
@@ -38,12 +37,9 @@ export async function PATCH(
   }
 }
 
-export async function DELETE(
-  request: Request,
-  { params }: { params: { id: string } }
-) {
+export async function DELETE(request: NextRequest, context: RouteContext) {
   try {
-    await deleteOrder(Number(params.id));
+    await deleteOrder(Number(context.params.id));
     return NextResponse.json({ message: "Order deleted successfully" });
   } catch (error) {
     console.error(error);
