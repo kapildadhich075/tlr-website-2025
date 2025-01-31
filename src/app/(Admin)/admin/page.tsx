@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 import {
   Card,
@@ -59,12 +59,24 @@ import { MoreHorizontal, ArrowUpDown } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { useOrderStore } from "@/store/useOrderStore";
-import { formSchema } from "@/types/order";
+import { Loading } from "@/components/ui/loading";
+import { ErrorDisplay } from "@/components/ui/error";
+import { useToast } from "@/hooks/use-toast";
+import {
+  useOrders,
+  useCreateOrder,
+  useUpdateOrder,
+  useDeleteOrder,
+} from "@/hooks/useOrders";
+import { formSchema, OrderStatus } from "@/types/order";
 
 export default function Admin() {
-  const { orders, addOrder, updateOrderStatus, deleteOrder } = useOrderStore();
-  const [isClient, setIsClient] = useState(false);
+  const { toast } = useToast();
+  const { data: orders = [], isLoading, isError, error, refetch } = useOrders();
+  const createOrderMutation = useCreateOrder();
+  const updateOrderMutation = useUpdateOrder();
+  const deleteOrderMutation = useDeleteOrder();
+
   const [isAddOrderModalOpen, setIsAddOrderModalOpen] = useState(false);
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
   const [selectedTab, setSelectedTab] = useState("all");
@@ -75,14 +87,10 @@ export default function Admin() {
       projectName: "",
       type: "video",
       status: "pending",
-      dueDate: "",
+      dueDate: new Date(),
       budget: 0,
     },
   });
-
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
 
   const stats = React.useMemo(
     () => ({
@@ -96,7 +104,7 @@ export default function Admin() {
       },
       customers: {
         count: orders.length,
-        newToday: Math.floor(Math.random() * 5), // Random number for demo
+        newToday: Math.floor(Math.random() * 5),
       },
     }),
     [orders]
@@ -108,27 +116,70 @@ export default function Admin() {
       filtered = filtered.filter((order) => order.status === selectedTab);
     }
     return filtered.sort((a, b) => {
-      const comparison =
-        sortOrder === "asc"
-          ? a.id.localeCompare(b.id)
-          : b.id.localeCompare(a.id);
+      const comparison = sortOrder === "asc" ? a.id - b.id : b.id - a.id;
       return comparison;
     });
   }, [orders, selectedTab, sortOrder]);
 
-  const onSubmit = (values: z.infer<typeof formSchema>) => {
-    addOrder({ ...values, id: crypto.randomUUID() });
-    setIsAddOrderModalOpen(false);
-    form.reset();
-  };
-
-  const handleDeleteOrder = (id: string) => {
-    if (window.confirm("Are you sure you want to delete this order?")) {
-      deleteOrder(id);
+  const handleUpdateStatus = async (id: number, status: OrderStatus) => {
+    try {
+      await updateOrderMutation.mutateAsync({ id, order: { status } });
+      toast({
+        title: "Success",
+        description: "Order status updated successfully",
+      });
+    } catch (error) {
+      console.error(error);
+      toast({
+        title: "Error",
+        description: "Failed to update order status",
+        variant: "destructive",
+      });
     }
   };
 
-  if (!isClient) return null;
+  const handleDeleteOrder = async (id: number) => {
+    if (!window.confirm("Are you sure you want to delete this order?")) return;
+    try {
+      await deleteOrderMutation.mutateAsync(id);
+      toast({
+        title: "Success",
+        description: "Order deleted successfully",
+      });
+    } catch (error) {
+      console.error(error);
+      toast({
+        title: "Error",
+        description: "Failed to delete order",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    try {
+      await createOrderMutation.mutateAsync({
+        ...values,
+        dueDate: new Date(values.dueDate),
+      });
+      setIsAddOrderModalOpen(false);
+      form.reset();
+      toast({
+        title: "Success",
+        description: "Order created successfully",
+      });
+    } catch (error) {
+      console.error(error);
+      toast({
+        title: "Error",
+        description: "Failed to create order",
+        variant: "destructive",
+      });
+    }
+  };
+
+  if (isLoading) return <Loading />;
+  if (isError) return <ErrorDisplay message={error?.message} retry={refetch} />;
 
   return (
     <div className="container mx-auto p-6 space-y-8 bg-gradient-to-r from-gray-900 to-black min-h-screen">
@@ -300,7 +351,7 @@ export default function Admin() {
                               <DropdownMenuLabel>Actions</DropdownMenuLabel>
                               <DropdownMenuItem
                                 onClick={() =>
-                                  updateOrderStatus(order.id, "pending")
+                                  handleUpdateStatus(order.id, "pending")
                                 }
                                 className="cursor-pointer hover:bg-gray-700"
                               >
@@ -308,7 +359,7 @@ export default function Admin() {
                               </DropdownMenuItem>
                               <DropdownMenuItem
                                 onClick={() =>
-                                  updateOrderStatus(order.id, "in-progress")
+                                  handleUpdateStatus(order.id, "in-progress")
                                 }
                                 className="cursor-pointer hover:bg-gray-700"
                               >
@@ -316,14 +367,16 @@ export default function Admin() {
                               </DropdownMenuItem>
                               <DropdownMenuItem
                                 onClick={() =>
-                                  updateOrderStatus(order.id, "completed")
+                                  handleUpdateStatus(order.id, "completed")
                                 }
                                 className="cursor-pointer hover:bg-gray-700"
                               >
                                 Mark as Completed
                               </DropdownMenuItem>
                               <DropdownMenuItem
-                                onClick={() => handleDeleteOrder(order.id)}
+                                onClick={() =>
+                                  handleDeleteOrder(Number(order.id))
+                                }
                                 className="cursor-pointer text-red-500 hover:bg-gray-700 hover:text-red-400"
                               >
                                 Delete Order
@@ -427,6 +480,11 @@ export default function Admin() {
                       <Input
                         type="date"
                         {...field}
+                        value={
+                          field.value instanceof Date
+                            ? field.value.toISOString().split("T")[0]
+                            : field.value
+                        }
                         className="bg-gray-800 border-gray-700"
                       />
                     </FormControl>
