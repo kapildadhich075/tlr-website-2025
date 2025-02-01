@@ -1,11 +1,31 @@
 import { UserButton } from "@clerk/nextjs";
+import { auth, currentUser } from "@clerk/nextjs/server";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 
-export default function DashboardLayout({
+export default async function DashboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const userId = await auth();
+
+  if (!userId) {
+    return redirect("/");
+  }
+
+  const user = await currentUser();
+
+  if (!user) {
+    return redirect("/");
+  }
+
+  const { role } = user.publicMetadata as { role?: string };
+
+  if (role === "admin") {
+    return redirect("/admin");
+  }
+
   return (
     <div className="min-h-screen flex flex-col">
       <header className="bg-gradient-to-br from-indigo-900 via-purple-800 to-pink-700 text-white shadow-xl">

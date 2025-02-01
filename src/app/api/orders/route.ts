@@ -3,12 +3,37 @@ import { getOrders, createOrder } from "@/lib/db-queries";
 import { NewOrder } from "@/db/drizzle";
 import { ZodError } from "zod";
 import { orderSchema } from "@/types/order";
-import { currentUser } from "@clerk/nextjs/server";
+import { auth, currentUser } from "@clerk/nextjs/server";
 
 export async function GET() {
   try {
+    const { userId } = await auth();
+    const sessionClaims = await currentUser();
+
+    if (!userId) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    // Check if user is admin
+    const isAdmin = sessionClaims?.publicMetadata?.role === "admin";
+
+    // Get all orders
     const allOrders = await getOrders();
-    return NextResponse.json(allOrders);
+
+    // If admin, return all orders
+    if (isAdmin) {
+      return NextResponse.json(allOrders);
+    }
+
+    // If regular user, filter by clientName
+    const userOrders = allOrders.filter((order) => {
+      return (
+        console.log("Order:", order),
+        order.clientName === sessionClaims?.fullName
+      );
+    });
+
+    return NextResponse.json(userOrders);
   } catch (error) {
     console.error("GET Orders Error:", error);
     const errorMessage =

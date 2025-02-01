@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { Menu } from "lucide-react";
 import { useState, useEffect } from "react";
+import { useUser } from "@clerk/nextjs";
 
 import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "./ui/sheet";
 import { SignInButton } from "@clerk/nextjs";
@@ -13,6 +14,8 @@ import { SignedIn } from "@clerk/nextjs";
 
 export default function Header() {
   const [scrolled, setScrolled] = useState(false);
+  const { user } = useUser();
+  const isAdmin = user?.publicMetadata?.role === "admin";
 
   useEffect(() => {
     const handleScroll = () => {
@@ -89,10 +92,10 @@ export default function Header() {
           <li>
             <SignedIn>
               <Link
-                href="/dashboard"
+                href={isAdmin ? "/admin" : "/dashboard"}
                 className="hover:text-white transition-colors duration-200 font-medium"
               >
-                Dashboard
+                {isAdmin ? "Admin Panel" : "Dashboard"}
               </Link>
             </SignedIn>
           </li>
@@ -172,10 +175,10 @@ export default function Header() {
                 <li>
                   <SignedIn>
                     <Link
-                      href="/dashboard"
+                      href={isAdmin ? "/admin" : "/dashboard"}
                       className="text-lg font-medium hover:text-white transition-colors duration-200"
                     >
-                      Dashboard
+                      {isAdmin ? "Admin Panel" : "Dashboard"}
                     </Link>
                   </SignedIn>
                 </li>
