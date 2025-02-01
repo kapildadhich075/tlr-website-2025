@@ -32,7 +32,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 
-import { formSchema, Order } from "@/types/order";
+import { orderSchema, Order } from "@/types/order";
 import { OrderTable } from "@/app/(DashBoard)/_components/OrderTable.tsx";
 import { OrderStatusBadge } from "@/app/(DashBoard)/_components/OrderStatusBadge.tsx";
 import { StatsCard } from "@/app/(DashBoard)/_components/StatsCard.tsx";
@@ -41,9 +41,11 @@ import { useToast } from "@/hooks/use-toast";
 import { useState } from "react";
 import { Loading } from "@/components/ui/loading";
 import { ErrorDisplay } from "@/components/ui/error";
+import { useUser } from "@clerk/nextjs";
 
 function Dashboard() {
   const { toast } = useToast();
+  const user = useUser();
   const {
     data: ordersData = [],
     isLoading,
@@ -53,6 +55,7 @@ function Dashboard() {
   } = useOrders();
   const orders: Order[] = ordersData.map((order) => ({
     ...order,
+    clientName: order.clientName,
     status: order.status as "pending" | "in-progress" | "completed",
     type: order.type as "video" | "production",
   }));
@@ -62,8 +65,8 @@ function Dashboard() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isAddOrderModalOpen, setIsAddOrderModalOpen] = useState(false);
 
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<z.infer<typeof orderSchema>>({
+    resolver: zodResolver(orderSchema),
     defaultValues: {
       projectName: "",
       type: "video",
@@ -87,10 +90,11 @@ function Dashboard() {
     setIsModalOpen(true);
   };
 
-  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+  const onSubmit = async (values: z.infer<typeof orderSchema>) => {
     try {
       await createOrderMutation.mutateAsync({
         ...values,
+        clientName: user.user?.fullName || "",
         dueDate: new Date(values.dueDate),
       });
       setIsAddOrderModalOpen(false);
@@ -226,6 +230,13 @@ function Dashboard() {
           </DialogHeader>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+              <div className="flex flex-col ">
+                <h1 className="text-xl font-bold ">Client Name:</h1>
+                <p className="text-lg font-semibold text-gray-400">
+                  {user.user?.fullName}
+                </p>
+              </div>
+
               <FormField
                 control={form.control}
                 name="projectName"

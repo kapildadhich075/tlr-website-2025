@@ -2,7 +2,8 @@ import { NextResponse } from "next/server";
 import { getOrders, createOrder } from "@/lib/db-queries";
 import { NewOrder } from "@/db/drizzle";
 import { ZodError } from "zod";
-import { formSchema } from "@/types/order";
+import { orderSchema } from "@/types/order";
+import { currentUser } from "@clerk/nextjs/server";
 
 export async function GET() {
   try {
@@ -21,13 +22,21 @@ export async function GET() {
 
 export async function POST(request: Request) {
   try {
+    const user = await currentUser();
+    if (!user) {
+      return NextResponse.json(
+        { error: "User not authenticated" },
+        { status: 401 }
+      );
+    }
     const body = await request.json();
 
     // Validate the request body against your schema
-    const validatedData = formSchema.parse(body);
+    const validatedData = orderSchema.parse(body);
 
     // Ensure the data matches your NewOrder type
     const orderData: NewOrder = {
+      clientName: user.fullName ?? "Unknown",
       projectName: validatedData.projectName,
       type: validatedData.type,
       status: validatedData.status,

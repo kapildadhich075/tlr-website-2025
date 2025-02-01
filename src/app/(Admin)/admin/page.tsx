@@ -68,7 +68,7 @@ import {
   useUpdateOrder,
   useDeleteOrder,
 } from "@/hooks/useOrders";
-import { formSchema, OrderStatus } from "@/types/order";
+import { orderSchema, OrderStatus } from "@/types/order";
 
 export default function Admin() {
   const { toast } = useToast();
@@ -81,8 +81,8 @@ export default function Admin() {
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
   const [selectedTab, setSelectedTab] = useState("all");
 
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<z.infer<typeof orderSchema>>({
+    resolver: zodResolver(orderSchema),
     defaultValues: {
       projectName: "",
       type: "video",
@@ -156,11 +156,12 @@ export default function Admin() {
     }
   };
 
-  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+  const onSubmit = async (values: z.infer<typeof orderSchema>) => {
     try {
       await createOrderMutation.mutateAsync({
         ...values,
         dueDate: new Date(values.dueDate),
+        clientName: "",
       });
       setIsAddOrderModalOpen(false);
       form.reset();
@@ -294,6 +295,9 @@ export default function Admin() {
                         </Button>
                       </TableHead>
                       <TableHead className="text-gray-300">
+                        Client Name
+                      </TableHead>
+                      <TableHead className="text-gray-300">
                         Project Name
                       </TableHead>
                       <TableHead className="text-gray-300">Type</TableHead>
@@ -310,6 +314,9 @@ export default function Admin() {
                       <TableRow key={order.id} className="hover:bg-gray-800/50">
                         <TableCell className="font-medium text-gray-300">
                           {order.id}
+                        </TableCell>
+                        <TableCell className="text-gray-300">
+                          {order.clientName}
                         </TableCell>
                         <TableCell className="text-gray-300">
                           {order.projectName}

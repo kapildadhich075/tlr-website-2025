@@ -8,6 +8,7 @@ import {
 
 export const orders = pgTable("orders", {
   id: serial("id").primaryKey(),
+  clientName: varchar("client_name", { length: 255 }).notNull(),
   projectName: varchar("project_name", { length: 255 }).notNull(),
   status: varchar("status", { length: 20 }).notNull().default("pending"),
   type: varchar("type", { length: 20 }).notNull(),
